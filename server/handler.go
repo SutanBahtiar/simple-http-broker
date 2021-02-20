@@ -7,23 +7,22 @@
 package server
 
 import (
-	"fmt"
+	"log"
 	"net/http"
 	"simple-http-broker/client"
 )
 
 func handler(w http.ResponseWriter, req *http.Request) {
-	fmt.Println("====================== start ========================================")
-	fmt.Println("Host			: ", req.Host)
-	fmt.Println("URL			: ", req.URL)
-	fmt.Println("Method			: ", req.Method)
+	log.Println("Host		: ", req.Host)
+	log.Println("URL			: ", req.URL)
+	log.Println("Method		: ", req.Method)
 
 	for reqHKey, reqHValue := range req.Header {
-		fmt.Println("Header Key		: ", reqHKey)
-		fmt.Println("Header Value		: ", reqHValue)
+		log.Println("Header Key		: ", reqHKey)
+		log.Println("Header Value	: ", reqHValue)
 	}
 
-	fmt.Println("======================  end  ========================================")
+	log.Println("=================================================")
 
 	// http client request
 	resp, body := client.Request(req)

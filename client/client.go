@@ -16,13 +16,29 @@ var BaseURL string
 
 // Request is http client request
 // return *http.Response and response body
-func Request(req *http.Request) (resp *http.Response, body []byte) {
-	resp, err := http.Get(BaseURL + req.URL.Path)
+func Request(req *http.Request) (response *http.Response, body []byte) {
+	var client = &http.Client{}
+
+	// resp, err := http.Get(BaseURL + req.URL.Path)
+	request, err := http.NewRequest(req.Method, BaseURL+req.URL.Path, req.Body)
+
+	// header
+	for hKey, hValue := range req.Header {
+		for _, v := range hValue {
+			request.Header.Set(hKey, v)
+		}
+	}
+
 	if err != nil {
 		panic(err)
 	}
-	defer resp.Body.Close()
 
-	body, err = ioutil.ReadAll(resp.Body)
+	response, error := client.Do(request)
+	if error != nil {
+		panic(error)
+	}
+	defer response.Body.Close()
+
+	body, error = ioutil.ReadAll(response.Body)
 	return
 }
