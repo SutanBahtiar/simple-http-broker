@@ -15,6 +15,7 @@ import (
 func handler(w http.ResponseWriter, req *http.Request) {
 	log.Println("Host		: ", req.Host)
 	log.Println("URL			: ", req.URL)
+	log.Println("Query		: ", req.URL.Query())
 	log.Println("Method		: ", req.Method)
 
 	for reqHKey, reqHValue := range req.Header {

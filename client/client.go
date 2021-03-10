@@ -8,6 +8,7 @@ package client
 
 import (
 	"io/ioutil"
+	"log"
 	"net/http"
 )
 
@@ -19,8 +20,8 @@ var BaseURL string
 func Request(req *http.Request) (response *http.Response, body []byte) {
 	var client = &http.Client{}
 
-	// resp, err := http.Get(BaseURL + req.URL.Path)
-	request, err := http.NewRequest(req.Method, BaseURL+req.URL.Path, req.Body)
+	url := BaseURL + req.URL.Path
+	request, err := http.NewRequest(req.Method, url, req.Body)
 
 	// header
 	for hKey, hValue := range req.Header {
@@ -29,9 +30,21 @@ func Request(req *http.Request) (response *http.Response, body []byte) {
 		}
 	}
 
+	// query
+	query := request.URL.Query()
+	for qKey, qValue := range req.URL.Query() {
+		for _, v := range qValue {
+			query.Add(qKey, v)
+		}
+	}
+	request.URL.RawQuery = query.Encode()
+
 	if err != nil {
 		panic(err)
 	}
+
+	log.Println("Request:", request.URL.String())
+	log.Println("Query:", request.URL.Query())
 
 	response, error := client.Do(request)
 	if error != nil {
