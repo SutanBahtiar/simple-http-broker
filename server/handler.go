@@ -10,23 +10,23 @@ import (
 	"log"
 	"net/http"
 	"simple-http-broker/client"
+	"simple-http-broker/util"
 )
 
 func handler(w http.ResponseWriter, req *http.Request) {
-	log.Println("Host		: ", req.Host)
-	log.Println("URL			: ", req.URL)
-	log.Println("Query		: ", req.URL.Query())
-	log.Println("Method		: ", req.Method)
+	logId := util.LogId()
+	log.Printf("%s, Host:%s", logId, req.Host)
+	log.Printf("%s, URL:%s", logId, req.URL)
+	log.Printf("%s, Query:%s", logId, req.URL.Query())
+	log.Printf("%s, Method:%s", logId, req.Method)
 
 	for reqHKey, reqHValue := range req.Header {
-		log.Println("Header Key		: ", reqHKey)
-		log.Println("Header Value	: ", reqHValue)
+		log.Printf("%s, Header Key:%s", logId, reqHKey)
+		log.Printf("%s, Header Value:%s", logId, reqHValue)
 	}
 
-	log.Println("=================================================")
-
 	// http client request
-	resp, body := client.Request(req)
+	resp, body := client.Request(&logId, req)
 
 	// headers
 	for hKey, hValue := range resp.Header {

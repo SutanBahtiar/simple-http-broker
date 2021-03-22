@@ -17,7 +17,7 @@ var BaseURL string
 
 // Request is http client request
 // return *http.Response and response body
-func Request(req *http.Request) (response *http.Response, body []byte) {
+func Request(logId *string, req *http.Request) (response *http.Response, body []byte) {
 	var client = &http.Client{}
 
 	url := BaseURL + req.URL.Path
@@ -43,8 +43,8 @@ func Request(req *http.Request) (response *http.Response, body []byte) {
 		panic(err)
 	}
 
-	log.Println("Request:", request.URL.String())
-	log.Println("Query:", request.URL.Query())
+	log.Printf("%s, Request URL:%s", *logId, request.URL.String())
+	log.Printf("%s, Request Query:%s", *logId, request.URL.Query())
 
 	response, error := client.Do(request)
 	if error != nil {
@@ -52,6 +52,6 @@ func Request(req *http.Request) (response *http.Response, body []byte) {
 	}
 	defer response.Body.Close()
 
-	body, error = ioutil.ReadAll(response.Body)
+	body, _ = ioutil.ReadAll(response.Body)
 	return
 }

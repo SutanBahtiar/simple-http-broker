@@ -7,28 +7,18 @@
 package main
 
 import (
-	"bufio"
+	"flag"
 	"fmt"
-	"os"
 	"simple-http-broker/client"
 	"simple-http-broker/server"
-	"strings"
 )
 
 func main() {
-	r := bufio.NewReader(os.Stdin)
-	fmt.Println("Input port to use in http server")
-	fmt.Println("Example `8080`")
-	fmt.Print("Port Server :")
-	port, _ := r.ReadString('\n')
-
-	fmt.Println("Input base url to use in http client")
-	fmt.Println("Example `http://github.com`")
-	fmt.Print("URL Client :")
-	url, _ := r.ReadString('\n')
-
-	server.Port = ":" + strings.Trim(port, "\n")
-	client.BaseURL = strings.Trim(url, "\n")
+	port := flag.Int64("port", 8080, "port for http server(default 8080)")
+	url := flag.String("url", "http://localhost", "base url for http client/e.g http://github.com")
+	flag.Parse()
+	server.Port = ":" + fmt.Sprint(*port)
+	client.BaseURL = *url
 
 	fmt.Println("=====================================================================")
 	fmt.Println("Http Server started on port", server.Port)
